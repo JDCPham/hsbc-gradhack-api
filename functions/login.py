@@ -4,15 +4,43 @@ from config import dynamodb
 
 def handler(event, context):
 
-    # Get User from DynamoDB.
-    database_response = dynamodb.get_item(
-        TableName="Users",
-        Key={
-            'Identifier': {
-                'S': '4280fa00-0f1a-41a3-8b64-fbea67238ea4'
-            }
-        }
-    )
+    try:
 
-    print(database_response)
-    return res.build(200, database_response)
+        # Get input from user.
+        body = json.loads(event.get('body'))
+
+        # Get Email and Password.
+        email = body.get('email')
+        password = body.get('password')
+
+        # Get response from database.
+        response = dynamodb.get_item(
+            TableName="Users",
+            Key={ 'Email': { 'S': email } }
+        ).get("Item", {})
+
+        # Get password from database response.
+        database_password = response.get('Password', {}).get('S')
+
+        # Compare Password
+        if (password == database_password):
+            return res.build(200, { 
+                'loggedIn': True,
+                'message': "Logged in"
+            })
+        else:
+            return res.build(400, {
+                'loggedIn': False,
+                'message': "Wrong password"
+            })
+
+
+    except Exception as e:
+
+        print(str(e))
+
+        return res.build(400, {
+            'loggedIn': False,
+            'message': str(e)
+        })
+
