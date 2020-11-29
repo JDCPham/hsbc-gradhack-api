@@ -1,0 +1,49 @@
+service: gradhack-api
+
+provider:
+  name: aws
+  runtime: python3.7
+  memorySize: 128
+  timeout: 30
+  profile: gradhack
+  iamRoleStatements: ${file(serverless/provider.yml)}
+  region: us-east-2
+
+
+functions:
+  hello:
+    handler: functions.login.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /hello
+          method: GET
+          cors: true
+
+
+package:
+  exclude:
+    - "**"
+  include:
+    - "./functions/**"
+    - "./utils/**"
+    - "./config.py"
+
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  pythonRequirements:
+    pythonBin: python
+    dockerizePip: non-linux
+    slim: true
+    layer:
+      name: ${self:service}-python-requirements
+      description: Python Requirements Lambda Layer
+      compatibleRuntimes:
+        - python3.8
+      licenseInfo: GPLv3
+      allowedAccounts:
+        - '*'
