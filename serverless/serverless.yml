@@ -11,13 +11,13 @@ provider:
 
 
 functions:
-  hello:
+  login:
     handler: functions.login.handler
     layers:
       - { Ref: PythonRequirementsLambdaLayer }
     events:
       - http:
-          path: /hello
+          path: /login
           method: GET
           cors: true
 
