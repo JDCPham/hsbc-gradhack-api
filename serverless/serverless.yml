@@ -38,6 +38,33 @@ functions:
           path: /upcoming-activities/{email}
           method: GET
           cors: true
+  activity:
+    handler: functions.activity.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /activity/{activity}
+          method: GET
+          cors: true
+  cancel-activity:
+    handler: functions.cancel-activity.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /delete-activity/{email}/{activityId}
+          method: DELETE
+          cors: true
+  add-activity:
+    handler: functions.add-activity.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /add-activity/{email}/{id}
+          method: POST
+          cors: true
 
 
 package:
