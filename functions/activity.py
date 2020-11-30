@@ -38,7 +38,8 @@ def handler(event, context):
                 'Timestamp': response.get('Timestamp', {}).get('S'),
                 'Penalty': response.get('Penalty', {}).get('N'),
                 'Postcode': response.get('Postcode', {}).get('S'),
-                'Latitu'
+                'Latitude': response.get('Latitude', {}).get('N'),
+                'Longitude': response.get('Longitude', {}).get('N')
         }
 
         return res.build(200, response)

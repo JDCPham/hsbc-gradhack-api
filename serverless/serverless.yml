@@ -65,6 +65,15 @@ functions:
           path: /add-activity/{email}/{id}
           method: POST
           cors: true
+  transactions:
+    handler: functions.get-transactions.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /transactions/{email}
+          method: GET
+          cors: true
 
 
 package:
