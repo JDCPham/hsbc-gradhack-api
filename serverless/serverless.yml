@@ -74,6 +74,24 @@ functions:
           path: /transactions/{email}
           method: GET
           cors: true
+  deposit:
+    handler: functions.deposit.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /deposit/{email}/{amount}
+          method: GET
+          cors: true
+  withdraw:
+    handler: functions.withdraw.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /withdraw/{email}/{amount}
+          method: GET
+          cors: true
 
 
 package:
