@@ -291,4 +291,7 @@ dmypy.json
 !.vscode/extensions.json
 *.code-workspace
 
+# -lock.json
+package-lock.json
+
 # End of https://www.toptal.com/developers/gitignore/api/macos,serverless,vscode,python,node
