@@ -1,0 +1,36 @@
+- Effect: 'Allow'
+  Action:
+    - 'lambda:InvokeFunction'
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - "secretsmanager:GetSecretValue"
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - "ssm:GetParameter"
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - "SNS:*"
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - sqs:*
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - s3:*
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - dynamodb:*
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - logs:*
+  Resource: "*"
+- Effect: "Allow"
+  Action:
+    - ses:SendTemplatedEmail
+  Resource: "*"

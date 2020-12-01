@@ -17,22 +17,20 @@ def handler(event, context):
         response = dynamodb.get_item(
             TableName="Users",
             Key={ 'Email': { 'S': email } }
-        ).get("Item", {})
+        ).get("Item", None)
 
         # check if already registered
-        if (response != ""): 
-            ## TODO: need to check,
-            # may also no needed, it will jump to except section instead
+        if (response is not None): 
             return res.build(400, {
                 'registered': False,
-                'message': 'Already registered'
+                'message': 'email existed'
             })
 
         dynamodb.put_item(
             TableName="Users",
             Item={
                 'Email': {'S': email},
-                'Balance': {'N': 0}, # TODO: not sure need bracket {} or not
+                'Balance': {'N': '0'},
                 'First Name': {'S': first_name},
                 'Last Name': {'S': last_name},
                 'Password': {'S': password}

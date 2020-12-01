@@ -1,0 +1,130 @@
+service: gradhack-api
+
+provider:
+  name: aws
+  runtime: python3.7
+  memorySize: 1024
+  timeout: 30
+  profile: gradhack
+  iamRoleStatements: ${file(provider.yml)}
+  region: us-east-2
+
+
+functions:
+  login:
+    handler: functions.login.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /login
+          method: POST
+          cors: true
+  register:
+    handler: functions.register.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /register
+          method: POST
+          cors: true
+  user-details:
+    handler: functions.user-details.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /user-details/{email}
+          method: GET
+          cors: true
+  upcoming-activities:
+    handler: functions.upcoming-activities.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /upcoming-activities/{email}
+          method: GET
+          cors: true
+  activity:
+    handler: functions.activity.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /activity/{activity}
+          method: GET
+          cors: true
+  cancel-activity:
+    handler: functions.cancel-activity.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /delete-activity/{email}/{activityId}
+          method: DELETE
+          cors: true
+  add-activity:
+    handler: functions.add-activity.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /add-activity/{email}/{id}
+          method: POST
+          cors: true
+  transactions:
+    handler: functions.get-transactions.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /transactions/{email}
+          method: GET
+          cors: true
+  deposit:
+    handler: functions.deposit.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /deposit/{email}/{amount}
+          method: GET
+          cors: true
+  withdraw:
+    handler: functions.withdraw.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /withdraw/{email}/{amount}
+          method: GET
+          cors: true
+
+
+package:
+  exclude:
+    - "**"
+  include:
+    - "./functions/**"
+    - "./utils/**"
+    - "./config.py"
+
+plugins:
+  - serverless-python-requirements
+  - serverless-offline
+
+custom:
+  pythonRequirements:
+    pythonBin: python
+    dockerizePip: non-linux
+    slim: true
+    layer:
+      name: ${self:service}-python-requirements
+      description: Python Requirements Lambda Layer
+      compatibleRuntimes:
+        - python3.8
+      licenseInfo: GPLv3
+      allowedAccounts:
+        - '*'
