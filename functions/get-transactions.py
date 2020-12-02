@@ -25,7 +25,7 @@ def handler(event, context):
 
         transactions = json.loads(response.get("Transactions", {}).get('S', "[]"))
 
-        return res.build(200, transactions.reverse())
+        return res.build(200, transactions)
        
     except Exception as e:
 
