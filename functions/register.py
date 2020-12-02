@@ -26,6 +26,7 @@ def handler(event, context):
                 'message': 'email existed'
             })
 
+        # update user db
         dynamodb.put_item(
             TableName="Users",
             Item={
@@ -34,6 +35,24 @@ def handler(event, context):
                 'First Name': {'S': first_name},
                 'Last Name': {'S': last_name},
                 'Password': {'S': password}
+            }
+        )
+
+        # update upcoming activity db
+        dynamodb.put_item(
+            TableName="Upcoming-Activities",
+            Item={
+                'Email': {'S': email},
+                'Activities': {'S': '[]'}
+            }
+        )
+
+        # update transcation db
+        dynamodb.put_item(
+            TableName="Transactions",
+            Item={
+                'Email': {'S': email},
+                'Transactions': {'S': '[]'}
             }
         )
 
