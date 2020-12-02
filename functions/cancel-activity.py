@@ -60,15 +60,23 @@ def handler(event, context):
             }
         )
 
+        transaction_response = dynamodb.get_item(
+            TableName="Transactions",
+            Key={ 'Email': {'S': email}}
+        ).get("Item", {})
+
+        transactions = json.loads(transaction_response.get('Transactions', {}).get('S', "[]"))
+        transactions.append({
+            'amount': -5,
+            'reason': "Cancelled Activity",
+            'timestamp': '{}T{}Z'.format(arrow.utcnow().format("YYYY-MM-DD"), arrow.utcnow().format("HH:mm:ss"))
+        })
+
         dynamodb.put_item(
             TableName="Transactions",
             Item={
                 'Email': {'S': email},
-                'Transactions': {'S': json.dumps({
-                    'amount': -5,
-                    'reason': "Cancelled Activity",
-                    'timestamp': '{}T{}Z'.format(arrow.utcnow().format("YYYY-MM-DD"), arrow.utcnow().format("HH:mm:ss"))
-                })}
+                'Transactions': {'S': json.dumps(transactions)}
             }
         )
 
@@ -80,5 +88,7 @@ def handler(event, context):
 
         print(str(e))
 
-        return res.build(400, {})
+        return res.build(400, {
+            'error': str(e)
+        })
 

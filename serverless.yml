@@ -101,6 +101,15 @@ functions:
           path: /withdraw/{email}/{amount}
           method: GET
           cors: true
+  all-activities:
+    handler: functions.all-activities.handler
+    layers:
+      - { Ref: PythonRequirementsLambdaLayer }
+    events:
+      - http:
+          path: /all-activities
+          method: GET
+          cors: true
 
 
 package:
